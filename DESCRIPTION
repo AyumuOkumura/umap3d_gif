@@ -1,0 +1,23 @@
+Package: umap3dGIF
+Type: Package
+Title: Create 3D UMAP Rotating GIF Animations from Seurat Objects
+Version: 0.1.0
+Authors@R: person("Ayumu", "Okumura", email = "your.email@example.com", role = c("aut", "cre"))
+Description: Generate rotating 3D UMAP visualizations as GIF animations from
+    Seurat single-cell RNA-seq objects.  Supports custom coloring, cluster labeling,
+    and memory-optimized frame generation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+Imports:
+    Seurat (>= 4.0.0),
+    rgl,
+    magick,
+    gifski,
+    scales
+Suggests:
+    scCustomize,
+    testthat (>= 3.0.0)
+URL: https://github.com/AyumuOkumura/umap3d_gif
+BugReports: https://github.com/AyumuOkumura/umap3d_gif/issues
