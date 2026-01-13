@@ -17,7 +17,6 @@ Imports:
     gifski,
     scales
 Suggests:
-    scCustomize,
     testthat (>= 3.0.0)
 URL: https://github.com/AyumuOkumura/umap3d_gif
 BugReports: https://github.com/AyumuOkumura/umap3d_gif/issues
