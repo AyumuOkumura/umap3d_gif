@@ -193,24 +193,24 @@ validate_inputs <- function(seurat_obj, fps, duration, n_components,
 
 #' Get or create 3D reduction
 #' @keywords internal
-get_or_create_3d_reduction <- function(seurat_obj, reduction, reduction. name.3d,
+get_or_create_3d_reduction <- function(seurat_obj, reduction, reduction.name.3d,
                                         recalc_umap, dims, n_components, verbose) {
-  if (! recalc_umap && reduction. name.3d %in% names(seurat_obj@reductions) && 
+  if (! recalc_umap && reduction.name.3d %in% names(seurat_obj@reductions) && 
       ncol(seurat_obj[[reduction.name.3d]]) >= 3) {
     if (verbose) cat(sprintf("Using existing 3D reduction: %s\n", reduction.name.3d))
-    return(reduction. name.3d)
+    return(reduction.name.3d)
   } else if (! recalc_umap && reduction %in% names(seurat_obj@reductions) && 
              ncol(seurat_obj[[reduction]]) >= 3) {
     if (verbose) cat(sprintf("Using existing 3D reduction: %s\n", reduction))
     return(reduction)
   } else {
-    if (verbose) cat(sprintf("Calculating 3D UMAP into '%s'...\n", reduction. name.3d))
+    if (verbose) cat(sprintf("Calculating 3D UMAP into '%s'...\n", reduction.name.3d))
     seurat_obj <- Seurat::RunUMAP(
       seurat_obj, 
       dims = dims, 
-      n. components = n_components,
-      reduction. name = reduction.name.3d, 
-      reduction. key = "UMAP3D_", 
+      n.components = n_components,
+      reduction.name = reduction.name.3d, 
+      reduction.key = "UMAP3D_", 
       verbose = FALSE
     )
     return(reduction.name.3d)
@@ -226,7 +226,7 @@ get_cluster_assignments <- function(seurat_obj, cluster_column) {
     if (! cluster_column %in% colnames(seurat_obj@meta.data)) {
       stop("cluster_column '", cluster_column, "' not found in metadata")
     }
-    return(factor(seurat_obj@meta. data[[cluster_column]]))
+    return(factor(seurat_obj@meta.data[[cluster_column]]))
   }
 }
 
@@ -303,7 +303,7 @@ add_cluster_labels <- function(umap3d, clusters, label_color, label_size) {
 #' Create temporary directory for frames
 #' @keywords internal
 create_temp_directory <- function() {
-  temp_dir <- file.path(tempdir(), paste0("umap_frames_", format(Sys. time(), "%Y%m%d_%H%M%S")))
+  temp_dir <- file.path(tempdir(), paste0("umap_frames_", format(Sys.time(), "%Y%m%d_%H%M%S")))
   dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
   return(temp_dir)
 }
