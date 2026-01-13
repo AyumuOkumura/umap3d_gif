@@ -11,7 +11,7 @@ Create stunning rotating 3D UMAP visualizations as animated GIFs from Seurat sin
 ### Features
 
 - ✨ **Automatic 3D UMAP calculation** or use existing reductions
-- 🎨 **Flexible coloring options** with support for scCustomize palettes
+- 🎨 **Flexible coloring options** with customizable color schemes
 - 🏷️ **Cluster labeling** with centroid positioning
 - 🔄 **Smooth rotation animation** with customizable speed and duration
 - 💾 **Memory-optimized** frame-by-frame processing
@@ -32,9 +32,6 @@ This package requires several dependencies:
 
 ```r
 install.packages(c("Seurat", "rgl", "magick", "gifski", "scales"))
-
-# Optional but recommended for better color palettes
-install.packages("scCustomize")
 ```
 
 For `magick`, you may need to install ImageMagick on your system: 
@@ -94,16 +91,6 @@ create_umap3d_gif(
 )
 ```
 
-### Using scCustomize Palettes
-
-```r
-create_umap3d_gif(
-  seurat_obj,
-  palette = "polychrome",  # Other options: "varibow", "stepped", etc.
-  shuffle_colors = TRUE
-)
-```
-
 ### High-Quality Output with Transparent Background
 
 ```r
@@ -126,7 +113,6 @@ create_umap3d_gif(
   file_name = "my_cells",
   tag = "labeled",              # Adds tag to filename
   cluster_column = "seurat_clusters",
-  palette = "varibow",
   recalc_umap = TRUE,          # Force recalculation of 3D UMAP
   dims = 1: 50,                 # Use more PCs
   label = TRUE,
@@ -151,7 +137,6 @@ create_umap3d_gif(
 | `cluster_column` | `NULL` | Metadata column for clusters (uses `Idents()` if NULL) |
 | `label` | `FALSE` | Show cluster labels at centroids |
 | `cols` | `NULL` | Custom color vector for clusters |
-| `palette` | `"varibow"` | scCustomize palette name |
 | `fps` | `10` | Frames per second |
 | `duration` | `15` | Animation duration in seconds |
 | `window_size` | `c(800, 800)` | Output resolution (width, height) |
@@ -226,4 +211,3 @@ Found a bug or have a feature request?  Please open an issue on [GitHub](https:/
 - Built on top of [Seurat](https://satijalab.org/seurat/)
 - Uses [rgl](https://dmurdoch.github.io/rgl/) for 3D visualization
 - GIF creation powered by [gifski](https://gif.ski/)
-- Color palettes from [scCustomize](https://github.com/samuel-marsh/scCustomize)

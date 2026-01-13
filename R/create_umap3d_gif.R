@@ -10,19 +10,16 @@
 #'   If NULL, uses the object name.  Default:  NULL
 #' @param tag Character. Optional tag to append to the filename. Default: NULL
 #' @param reduction Character. Name of the reduction to use as basis.  Default: "umap"
-#' @param reduction. name. 3d Character. Name for the 3D reduction if calculating.  
+#' @param reduction.name.3d Character. Name for the 3D reduction if calculating.  
 #'   Default: "umap3d"
 #' @param recalc_umap Logical. Force recalculation of 3D UMAP even if it exists.
 #'   Default: FALSE
 #' @param cluster_column Character. Name of metadata column containing cluster assignments.
 #'   If NULL, uses Idents(seurat_obj). Default: NULL
-#' @param palette Character. Color palette name from scCustomize.  Options include
-#'   "varibow", "polychrome", "stepped", etc. Default: "varibow"
-#' @param shuffle_colors Logical. Whether to shuffle the palette colors. Default: TRUE
 #' @param dims Integer vector. Dimensions to use for UMAP calculation. Default: 1:30
 #' @param n_components Integer. Number of UMAP components (must be 3 for 3D). Default: 3L
-#' @param cols Character vector. Custom colors for clusters. If provided, overrides
-#'   palette. Can be named (cluster names) or unnamed (by order). Default: NULL
+#' @param cols Character vector. Custom colors for clusters. Can be named 
+#'   (cluster names) or unnamed (by order). Default: NULL
 #' @param label Logical. Whether to display cluster labels at centroids. Default: FALSE
 #' @param label_size Numeric. Size of cluster labels. Default: 1.0
 #' @param label_color Character. Color of cluster labels. Default: "gray"
@@ -89,8 +86,6 @@ create_umap3d_gif <- function(
     reduction.name.3d = "umap3d",
     recalc_umap = FALSE,
     cluster_column = NULL,
-    palette = "varibow",
-    shuffle_colors = TRUE,
     dims = 1:30,
     n_components = 3L,
     cols = NULL,
@@ -133,7 +128,7 @@ create_umap3d_gif <- function(
   
   # --- 2. Cluster & Color Setup ---
   clusters <- get_cluster_assignments(seurat_obj, cluster_column)
-  cell_colors <- assign_cell_colors(clusters, cols, palette, shuffle_colors, verbose)
+  cell_colors <- assign_cell_colors(clusters, cols, verbose)
   
   # --- 3. Plotting ---
   if (verbose) cat("Rendering 3D plot...\n")
@@ -232,31 +227,21 @@ get_cluster_assignments <- function(seurat_obj, cluster_column) {
 
 #' Assign colors to cells
 #' @keywords internal
-assign_cell_colors <- function(clusters, cols, palette, shuffle_colors, verbose) {
+assign_cell_colors <- function(clusters, cols, verbose) {
   n_clusters <- length(levels(clusters))
   
-  if (! is.null(cols)) {
+  if (!is.null(cols)) {
     if (verbose) cat("Using provided custom colors\n")
     if (length(cols) < n_clusters) {
-      warning("Number of colors provided is less than number of clusters.  Recycling colors.")
+      warning("Number of colors provided is less than number of clusters. Recycling colors.")
     }
-    cell_colors <- if (! is.null(names(cols))) {
+    cell_colors <- if (!is.null(names(cols))) {
       cols[as.character(clusters)]
     } else {
       cols[as.numeric(clusters)]
     }
-  } else if (requireNamespace("scCustomize", quietly = TRUE) && ! is.null(palette)) {
-    if (verbose) cat(sprintf("Using scCustomize palette:  %s\n", palette))
-    pal_colors <- scCustomize:: DiscretePalette_scCustomize(
-      num_colors = n_clusters, 
-      palette = palette, 
-      shuffle_pal = shuffle_colors
-    )
-    cell_colors <- pal_colors[as.numeric(clusters)]
   } else {
-    if (verbose && ! is.null(palette)) {
-      cat("scCustomize not available, using default colors\n")
-    }
+    if (verbose) cat("Using default color palette\n")
     cell_colors <- scales::hue_pal()(n_clusters)[as.numeric(clusters)]
   }
   
