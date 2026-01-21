@@ -6,7 +6,7 @@ Create stunning rotating 3D UMAP visualizations as animated GIFs from Seurat sin
 
 ## Overview
 
-`umap3dGIF` is an R package that generates high-quality, rotating 3D UMAP plots as animated GIFs from Seurat objects. It's designed to be memory-efficient, customizable, and easy to use for showcasing single-cell clustering results.
+`umap3dGIF` is an R package that generates high-quality, rotating 3D UMAP plots as animated GIFs from Seurat objects. It's designed to be memory-efficient, customizable, and easy to use for showcasing results.
 
 ### Features
 
@@ -38,6 +38,8 @@ For `magick`, you may need to install ImageMagick on your system:
 - **Windows**: Download from [ImageMagick website](https://imagemagick.org/script/download.php)
 - **macOS**: `brew install imagemagick`
 - **Linux**: `sudo apt-get install libmagick++-dev`
+
+For `rgl`, you need a working OpenGL display (X11/XQuartz on Linux/macOS). On headless servers, set `options(rgl.useNULL = TRUE)`.
 
 ## Quick Start
 
@@ -73,7 +75,7 @@ create_umap3d_gif(
   seurat_obj,
   cluster_column = "cell_type",  # Use a specific metadata column
   label = TRUE,                  # Show cluster labels
-  label_size = 1. 5,
+  label_size = 1.5,
   label_color = "black"
 )
 ```
@@ -114,7 +116,7 @@ create_umap3d_gif(
   tag = "labeled",              # Adds tag to filename
   cluster_column = "seurat_clusters",
   recalc_umap = TRUE,          # Force recalculation of 3D UMAP
-  dims = 1: 50,                 # Use more PCs
+  dims = 1:50,                  # Use more PCs
   label = TRUE,
   fps = 12,
   duration = 18,
@@ -131,7 +133,7 @@ create_umap3d_gif(
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `seurat_obj` | - | **Required. ** A Seurat object |
+| `seurat_obj` | - | **Required.** A Seurat object |
 | `file_name` | `NULL` | Base name for output GIF (without extension) |
 | `tag` | `NULL` | Optional tag to append to filename |
 | `cluster_column` | `NULL` | Metadata column for clusters (uses `Idents()` if NULL) |
@@ -141,16 +143,18 @@ create_umap3d_gif(
 | `duration` | `15` | Animation duration in seconds |
 | `window_size` | `c(800, 800)` | Output resolution (width, height) |
 | `point_size` | `3` | Size of data points |
-| `bg_color` | `"white"` | Background color |
+| `bg_color` | "white" | Background color |
 | `transparency_fuzz` | `10` | Background transparency (0-100) |
 | `recalc_umap` | `FALSE` | Force 3D UMAP recalculation |
 | `dims` | `1:30` | Dimensions for UMAP calculation |
-| `output_dir` | `"."` | Output directory |
+| `output_dir` | "." | Output directory |
 | `verbose` | `TRUE` | Print progress messages |
 
 ## Output
 
-The function creates a GIF file with the naming pattern:  `{file_name}_{tag}_umap3d.gif`
+The function creates a GIF file with the naming pattern:
+- `file_name` is provided: `{file_name}_{tag}_umap3d.gif` (tag omitted if NULL)
+- `file_name` is NULL: `{object_name}_umap3d.gif` (object name derived from the input)
 
 The GIF will show your 3D UMAP rotating 360 degrees, making it perfect for: 
 - 📊 Presentations and talks
@@ -204,7 +208,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Issues
 
-Found a bug or have a feature request?  Please open an issue on [GitHub](https://github.com/AyumuOkumura/umap3d_gif/issues).
+Found a bug or have a feature request? Please open an issue on [GitHub](https://github.com/AyumuOkumura/umap3d_gif/issues).  
+Support requests should be made via GitHub Issues (no email support).
 
 ## Acknowledgments
 
