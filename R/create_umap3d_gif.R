@@ -119,10 +119,13 @@ create_umap3d_gif <- function(
   }, add = TRUE)
   
   # --- 1. Data Preparation ---
-  target_reduction <- get_or_create_3d_reduction(
+  reduction_result <- get_or_create_3d_reduction(
     seurat_obj, reduction, reduction.name.3d, recalc_umap, 
     dims, n_components, verbose
   )
+  
+  seurat_obj <- reduction_result$seurat_obj
+  target_reduction <- reduction_result$reduction_name
   
   umap3d <- Seurat:: Embeddings(seurat_obj, target_reduction)[, 1:3]
   
@@ -193,11 +196,11 @@ get_or_create_3d_reduction <- function(seurat_obj, reduction, reduction.name.3d,
   if (! recalc_umap && reduction.name.3d %in% names(seurat_obj@reductions) && 
       ncol(seurat_obj[[reduction.name.3d]]) >= 3) {
     if (verbose) cat(sprintf("Using existing 3D reduction: %s\n", reduction.name.3d))
-    return(reduction.name.3d)
+    return(list(reduction_name = reduction.name.3d, seurat_obj = seurat_obj))
   } else if (! recalc_umap && reduction %in% names(seurat_obj@reductions) && 
              ncol(seurat_obj[[reduction]]) >= 3) {
     if (verbose) cat(sprintf("Using existing 3D reduction: %s\n", reduction))
-    return(reduction)
+    return(list(reduction_name = reduction, seurat_obj = seurat_obj))
   } else {
     if (verbose) cat(sprintf("Calculating 3D UMAP into '%s'...\n", reduction.name.3d))
     seurat_obj <- Seurat::RunUMAP(
@@ -208,7 +211,7 @@ get_or_create_3d_reduction <- function(seurat_obj, reduction, reduction.name.3d,
       reduction.key = "UMAP3D_", 
       verbose = FALSE
     )
-    return(reduction.name.3d)
+    return(list(reduction_name = reduction.name.3d, seurat_obj = seurat_obj))
   }
 }
 
@@ -397,5 +400,5 @@ sanitize_filename <- function(file_name, seurat_obj, verbose) {
 #' Sanitize string for filename
 #' @keywords internal
 sanitize_name <- function(x) {
-  gsub("[^[: alnum:]_.-]", "_", x)
+  gsub("[^[:alnum:]_.-]", "_", x)
 }
